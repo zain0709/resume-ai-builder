@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ResumAI
+
+AI-powered resume bullet enhancer. Paste raw job bullets → AI converts them to ATS-optimized achievements → pick a template → export as PDF.
+
+## Tech Stack
+
+- **Next.js 15** (App Router)
+- **Supabase** (Auth + Postgres)
+- **Tailwind CSS v4**
+- **TypeScript**
+- OpenAI API _(Day 3)_
+- react-pdf _(Day 4)_
+
+## Features
+
+| Status | Feature |
+|--------|---------|
+| ✅ | Google OAuth (Supabase) |
+| ✅ | Protected routes + session management |
+| ✅ | Navbar + sidebar layout |
+| ✅ | Dashboard UI |
+| 🔜 | Bullets CRUD (Day 2) |
+| 🔜 | AI enhancement via OpenAI (Day 3) |
+| 🔜 | Template picker — Modern / Classic / Executive (Day 4) |
+| 🔜 | PDF export (Day 4) |
+| 🔜 | Vercel deploy (Day 5) |
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone & install
+
+```bash
+git clone https://github.com/zain0709/resume-ai-builder.git
+cd resume-ai-builder
+npm install
+```
+
+### 2. Set up environment variables
+
+Create a `.env.local` file in the root:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+### 3. Configure Supabase
+
+- Enable **Google** as an OAuth provider in your Supabase project dashboard.
+- Add `http://localhost:3000/auth/callback` as an allowed redirect URL.
+
+### 4. Run the dev server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) — you'll be redirected to `/login`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+app/
+├── layout.tsx              # Root layout (fonts, metadata)
+├── page.tsx                # Redirects to /login
+├── globals.css
+├── (app)/                  # Protected route group
+│   ├── layout.tsx          # Navbar + sidebar
+│   ├── actions.ts          # signOut server action
+│   ├── dashboard/          # Main dashboard
+│   └── login/              # Google OAuth login
+│       ├── page.tsx
+│       ├── actions.ts      # signInWithGoogle server action
+│       └── GoogleButton.tsx # Client component with loading state
+├── auth/
+│   └── callback/           # OAuth redirect handler
+lib/
+└── supabase/
+    ├── server.ts           # SSR Supabase client
+    └── client.ts           # Browser Supabase client
+middleware.ts               # Route protection
+```
